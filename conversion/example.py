@@ -44,7 +44,7 @@ class UserList:
     users: list[User]
 
 
-convert_users_to_some_class = get_converter(
+converter = get_converter(
     UserList,
     OutputDTO,
     recipe=[
@@ -59,13 +59,13 @@ convert_users_to_some_class = get_converter(
     ],
 )
 
-users_container = UserList(
+users = UserList(
     users=[
         User(id=1, name="Alice", email="alice@example.com", address=Address("Street 1", "City A", "12345")),
         User(id=2, name="Bob", email="bob@example.com", address=Address("Street 2", "City B", "67890")),
     ]
 )
 
-some_class_instance = convert_users_to_some_class(users_container)
+output = converter(users)
 
-pprint(some_class_instance)
+pprint(output)
