@@ -4,7 +4,7 @@ from adaptix import P
 from adaptix.conversion import get_converter, link, coercer
 
 
-# для преобразования одного типа к другому используется coercer,
+# для приведения одного типа к другому используется coercer,
 # но link имеет более высокий приоритет над общими преобразованиями
 
 @dataclass
