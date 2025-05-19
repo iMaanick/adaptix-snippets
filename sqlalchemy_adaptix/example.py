@@ -4,11 +4,14 @@ from pprint import pprint
 from typing import Sequence
 
 from adaptix._internal.conversion.facade.func import get_converter
-from sqlalchemy import ForeignKey
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, selectinload
+from sqlalchemy.orm import selectinload
+
+from sqlalchemy_adaptix.models.address import AddressTable
+from sqlalchemy_adaptix.models.base import Base
+from sqlalchemy_adaptix.models.user import UserTable
 
 
 @dataclass
@@ -37,36 +40,7 @@ class AddressDTO:
 class UserDTO:
     name: str
     email: str
-    address: AddressDTO
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-class AddressTable(Base):
-    __tablename__ = "addresses"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    street: Mapped[str]
-    city: Mapped[str]
-    zip_code: Mapped[str]
-    users: Mapped[list["UserTable"]] = relationship(
-        back_populates="address",
-        cascade="all, delete-orphan",
-    )
-
-
-class UserTable(Base):
-    __tablename__ = "users"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
-    email: Mapped[str]
-    address_id: Mapped[int] = mapped_column(ForeignKey("addresses.id"))
-    address: Mapped[AddressTable] = relationship(
-        back_populates="users",
-    )
+    address: AddressDTO | None
 
 
 DATABASE_URL = "sqlite+aiosqlite:///:memory:"
