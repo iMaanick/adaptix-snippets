@@ -1,17 +1,18 @@
 import asyncio
 from dataclasses import dataclass
 from pprint import pprint
-from typing import Sequence
+from typing import Sequence, get_type_hints
 
 from adaptix._internal.conversion.facade.func import get_converter
+from adaptix._internal.type_tools import exec_type_checking
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import selectinload
 
+from sqlalchemy_adaptix.models import Base, UserTable, address, user
 from sqlalchemy_adaptix.models.address import AddressTable
-from sqlalchemy_adaptix.models.base import Base
-from sqlalchemy_adaptix.models.user import UserTable
+
 
 
 @dataclass
@@ -40,11 +41,13 @@ class AddressDTO:
 class UserDTO:
     name: str
     email: str
-    address: AddressDTO | None
+    address: AddressDTO
 
+exec_type_checking(address)
+exec_type_checking(user)
 
 DATABASE_URL = "sqlite+aiosqlite:///:memory:"
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(DATABASE_URL, echo=False)
 AsyncSessionMaker = async_sessionmaker(engine, expire_on_commit=False)
 
 
